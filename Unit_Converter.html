@@ -1,0 +1,132 @@
+<!-- Create A Webpage For Unit Converter  -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Unit Converter</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            height: 100vh; /* It will Apply Gradinet on whole page */
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(to bottom, #FF9933, #FFFFFF, #128807);
+        }
+
+
+        h1 {
+            margin-top: 150px;
+            text-align: center;
+            color: red;
+        }
+
+        .converter {
+            background: linear-gradient(to right bottom,
+                    tomato,
+                    gold,
+                    limegreen,
+                    deepskyblue,
+                    purple,
+                    coral,
+                    teal,
+                    hotpink);
+            max-width: 400px;
+            margin: 0 auto;
+            
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .F {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: darkred;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 7px;
+            border: 1px solid #e7e7e7;
+            border-radius: 3px;
+        }
+
+        button {
+            background-color: #c42c34;
+            color: white;
+            padding: 10px 20px;
+            border: 1px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #54d82c;
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Unit Converter</h1>
+    <div class="converter">
+        <div class="F">
+            <label for="input">User Input:</label>
+            <input type="number" id="input" placeholder="Enter a value That You Want To Convert." />
+        </div>
+        <div class="F">
+            <label for="from">From:</label>
+            <select id="from">
+                <option value="meters">Meters</option>
+                <option value="feet">Feet</option>
+                <option value="inches">Inches</option>
+            </select>
+        </div>
+        <div class="F">
+            <label for="to">To:</label>
+            <select id="to">
+                <option value="meters">Meters</option>
+                <option value="feet">Feet</option>
+                <option value="inches">Inches</option>
+            </select>
+        </div>
+        <button onclick="convert()">Convert</button>
+        <div id="result">
+
+        </div>
+    </div>
+
+    <script>
+        function convert() {
+            const input = parseFloat(document.getElementById("input").value);
+            const fromUnit = document.getElementById("from").value;
+            const toUnit = document.getElementById("to").value;
+
+            let result;
+
+            if (fromUnit === toUnit) {  //'===' Will Compaire The Value of variable with it's datatype.
+                result = input;
+            } else if (fromUnit === "meters" && toUnit === "feet") {
+                result = input * 3.28084;
+            } else if (fromUnit === "meters" && toUnit === "inches") {
+                result = input * 39.3701;
+            } else if (fromUnit === "feet" && toUnit === "meters") {
+                result = input * 0.3048;
+            } else if (fromUnit === "feet" && toUnit === "inches") {
+                result = input * 12;
+            } else if (fromUnit === "inches" && toUnit === "meters") {
+                result = input * 0.0254;
+            } else if (fromUnit === "inches" && toUnit === "feet") {
+                result = input * 0.0833333;
+            }
+
+            document.getElementById("result").innerHTML = `${input} ${fromUnit} = ${result} ${toUnit}`;
+        }
+    </script>
+</body>
+
+</html>

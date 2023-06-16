@@ -1,0 +1,267 @@
+<!-- Create a Timer and Stopwatch Using HTML, CSS & JavaScript -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timer and Stopwatch</title>
+
+  <style>
+    body {
+      color: #8fec73;
+      background-image: linear-gradient(red,yellow,#c882da,red,orange,green);
+      height: 100vh;
+      margin: 0; 
+      justify-content: center;
+      align-items: center;
+     
+    }
+    .T{
+      font-size: 50px;
+      font-style: bold;
+    }
+
+    .C {
+      text-align: center;
+    }
+
+    #D {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    #M {
+      font-size: 50px;
+      margin-top: 10px;
+    }
+
+    h1 {
+      background-color: #520f0f;
+      color: rgb(223, 20, 20);
+      font-style: italic;
+      font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+      text-decoration: underline;
+      text-decoration-color: yellow;
+      text-decoration-thickness: 5%;
+      text-decoration-style: dotted;
+    }
+
+    label {
+      background-color: rgb(116, 240, 229);
+      color: rgb(238, 175, 103);
+      cursor: text;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+
+    button {
+      cursor: pointer;
+      width: 80px;
+      
+      background-color: rgb(148, 25, 25);
+      color: #8fec73;
+      font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="C">
+      <h1>Set A Timer</h1>
+      <div>
+        <label for="hours">Hours &nbsp;&nbsp;&nbsp;:</label>
+        <input type="number" id="hours" min="0" max="24" value="0">
+      </div><br>
+      <div>
+        <label for="minutes">Minutes:</label>
+        <input type="number" id="minutes" min="0" max="59" value="0">
+      </div><br>
+      <div>
+        <label for="seconds">Seconds:</label>
+        <input type="number" id="seconds" min="0" max="59" value="0">
+      </div><br>
+      <button id="ST">Start</button>
+      <button id="PT" disabled>Pause</button>
+      <button id="RT" disabled>Resume</button>
+      <br><br><br>
+      <div id="Timer" class="T">00:00:00</div>
+      <div id="Message" class="T"></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="C">
+      <h1>Stopwatch</h1>
+      <div>
+        <button id="SB">Start</button>
+        <button id="PB" disabled>Pause</button>
+        <button id="RB" disabled>Reset</button>
+      </div>
+      <br>
+      <div>
+        <div id="Stopwatch"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // This Are Timer's variables
+    let Timer = document.getElementById('Timer'); /* Timer Means Timer Display */
+    let ST = document.getElementById('ST'); /* ST Means Start Timer */
+    let PT = document.getElementById('PT'); /* PT Means Pause Timer */
+    let RT = document.getElementById('RT'); /* RT Means Resume Timer */
+    let H = document.getElementById('hours'); /* H Means Hours will store in this variable*/
+    let M = document.getElementById('minutes');
+    let S = document.getElementById('seconds');
+
+    let timerInterval;
+    let timerRunning = false;
+    let paused = false;
+    let timerEndTime;
+
+
+    //  Below is The Stopwatch variables
+    
+    let Stopwatch = document.getElementById('Stopwatch');
+    Stopwatch.style.fontSize = '50px';
+    let SB = document.getElementById('SB'); /* SB Means Start Button */
+    let PB = document.getElementById('PB'); /* PB Means Pause Button */
+    let RB = document.getElementById('RB'); /* RB Means Reset Button */
+    
+    ST.style.fontSize = '20px';
+    PT.style.fontSize = '20px';
+    RT.style.fontSize = '20px';
+
+    let stopwatchStartTime;
+    let stopwatchElapsedTime = 0;
+    let stopwatchInterval;
+    let stopwatchRunning = false;
+    
+
+    function startTimer() {
+      if (!timerRunning) {
+        let hours = parseInt(H.value);
+        let minutes = parseInt(M.value);
+        let seconds = parseInt(S.value);
+
+        if (isNaN(hours)) hours = 0;
+        if (isNaN(minutes)) minutes = 0;
+        if (isNaN(seconds)) seconds = 0;
+
+        let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+        if (totalSeconds > 0) {
+          timerEndTime = Date.now() + totalSeconds * 1000;
+          timerInterval = setInterval(updateTimer, 10);
+          timerRunning = true;
+
+          ST.disabled = true;
+          PT.disabled = false;
+          RT.disabled = true;
+          H.disabled = true;
+          M.disabled = true;
+          S.disabled = true;
+          H.value="0"
+          M.value="0"
+          S.value="0"
+        }
+      }
+    }
+
+    function updateTimer() {
+      let remainingTime = Math.max(0, timerEndTime - Date.now());
+      let formattedTime = formatTime(remainingTime);
+      Timer.textContent = formattedTime;
+
+      if (remainingTime === 0) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        Timer.textContent = '00:00:00';
+        document.getElementById('Message').textContent = 'Time is up!';
+        ST.disabled = false;
+        PT.disabled = true;
+        RT.disabled = true;
+        H.disabled = false;
+        M.disabled = false;
+        S.disabled = false;
+      }
+    }
+
+    function formatTime(time) {
+      let milliseconds = Math.floor(time % 1000 / 10);
+      let seconds = Math.floor(time / 1000 % 60);
+      let minutes = Math.floor(time / 1000 / 60 % 60);
+      let hours = Math.floor(time / 1000 / 60 / 60);
+
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function pauseTimer() {
+      if (timerRunning && !paused) {
+        clearInterval(timerInterval);
+        paused = true;
+        PT.disabled = true;
+        RT.disabled = false;
+      }
+    }
+
+    function resumeTimer() {
+      if (timerRunning && paused) {
+        let remainingTime = timerEndTime - Date.now();
+        timerInterval = setInterval(updateTimer, 10);
+        paused = false;
+        PT.disabled = false;
+        RT.disabled = true;
+      }
+    }
+
+    function startStopwatch() {
+      if (!stopwatchRunning) {
+        stopwatchStartTime = Date.now() - stopwatchElapsedTime;
+        stopwatchInterval = setInterval(updateStopwatch, 10);
+        stopwatchRunning = true;
+
+        SB.disabled = true;
+        PB.disabled = false;
+        RB.disabled = false;
+      }
+    }
+
+    function updateStopwatch() {
+      stopwatchElapsedTime = Date.now() - stopwatchStartTime;
+      let formattedTime = formatTime(stopwatchElapsedTime);
+      Stopwatch.textContent = formattedTime;
+    }
+
+    function pauseStopwatch() {
+      if (stopwatchRunning) {
+        clearInterval(stopwatchInterval);
+        stopwatchRunning = false;
+
+        SB.disabled = false;
+        PB.disabled = true;
+      }
+    }
+
+    function resetStopwatch() {
+      clearInterval(stopwatchInterval);
+      stopwatchElapsedTime = 0;
+      stopwatchRunning = false;
+      Stopwatch.textContent = '00:00:00';
+
+      SB.disabled = false;
+      PB.disabled = true;
+      RB.disabled = true;
+    }
+
+    ST.addEventListener('click', startTimer);
+    PT.addEventListener('click', pauseTimer);
+    RT.addEventListener('click', resumeTimer);
+    SB.addEventListener('click', startStopwatch);
+    PB.addEventListener('click', pauseStopwatch);
+    RB.addEventListener('click', resetStopwatch);
+    SB.style.fontSize = '20px';
+    PB.style.fontSize = '20px';
+    RB.style.fontSize = '20px';
+
+  </script>
+</body>
+</html>
